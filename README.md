@@ -1,132 +1,68 @@
 
 # 🛡️ CyberStudy AI - Local RAG Chatbot
 
-Fully local cybersecurity study assistant built with FastAPI, Streamlit, Ollama, and ChromaDB.
-
-<<<<<<< HEAD
-A fully local cybersecurity study assistant built with FastAPI, Streamlit, Ollama, and ChromaDB.
 
 
 
-\## Features
+A local cybersecurity study assistant built with FastAPI, Streamlit, Ollama, and ChromaDB.
 
-
-
-\- Chat with cybersecurity notes and lab writeups.
-
-\- Multi-document RAG with source-aware answers.
-
-\- Fully local AI using Ollama.
-
-\- FastAPI backend for document ingestion and chat.
-
-\- Streamlit frontend for a simple chat interface.
-
-
-
-\## Tech Stack
-
-
-
-\- FastAPI
-
-\- Streamlit
-
-\- Ollama
-
-\- ChromaDB
-
-\- Python
-
-
-
-\## Demo
-
-
-=======
 ## Features
-- Chat with cybersecurity notes and lab writeups.
-- Multi-document RAG with source citations.
-- Local AI using llama3.2 and mxbai-embed-large.
-- Upload new TXT documents through the API.
-- Streamlit frontend with FastAPI backend.
 
-## Live Demo
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
+- Chat with cybersecurity notes and lab writeups
+- Multi-document RAG workflow
+- Local AI with Ollama
+- FastAPI backend
+- Streamlit frontend
 
-Run the backend in one terminal:
+## Tech Stack
+
+- Python
+- FastAPI
+- Streamlit
+- Ollama
+- ChromaDB
+
+## How It Works
+
+1. You add text documents to the project
+2. The documents are stored in ChromaDB
+3. Ollama creates embeddings and generates answers
+4. The FastAPI backend handles requests
+5. The Streamlit app provides the chat interface
+
+## Run the Project
+
+Start the backend:
 
 
 uvicorn backend.app.main:app --reload --port 8000
-<<<<<<< HEAD
+Start the frontend in another terminal:
 
-Run the frontend in another terminal:
-
-
-=======
-Run the frontend in a second terminal:
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
 
 streamlit run frontend/app.py
-<<<<<<< HEAD
-
-Open in your browser:
-=======
-Then open:
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
+Open:
 
 
 http://localhost:8501
-<<<<<<< HEAD
+Quick Start
 
-Screenshots
+git clone https://github.com/plusive27-max/cyberstudy-ai.git
+cd cyberstudy-ai
+pip install -r requirements.txt
+ollama pull llama3.2
+ollama pull mxbai-embed-large
+uvicorn backend.app.main:app --reload --port 8000
+streamlit run frontend/app.py
 
-Streamlit Chat UI
+Example Questions:
+What is cybersecurity?
 
-Streamlit Chat
+What is Wazuh?
 
+How does ransomware work?
 
+What are common cybersecurity threats?
 
-FastAPI Docs
-
-=======
-Screenshots
-Streamlit Chat UI
-Streamlit Chat
-
-FastAPI Backend Docs
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
-FastAPI Docs
-
-Project Structure
-![Folder Structure](Folder structure.png)
-
-<<<<<<< HEAD
-!\[Folder Structure](Folder structure.png)
-
-
-
-Architecture
-
-
-=======
-Architecture
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
-
-Your Notes (.txt files)
-        |
-        v
-ChromaDB Vector Store <-> Ollama Embeddings
-        |
-        v
-FastAPI Backend (/chat)
-        |
-        v
-Streamlit Frontend (localhost:8501)
-<<<<<<< HEAD
-
-=======
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
 Project Structure
 
 cyberstudy-ai/
@@ -142,84 +78,16 @@ cyberstudy-ai/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
-<<<<<<< HEAD
 
-Quick Start
+Future Improvements:
+Add PDF and DOCX support
 
+Add chat history
 
-=======
-Quick Start
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
+Add Docker setup
 
-git clone https://github.com/plusive27-max/cyberstudy-ai.git
-cd cyberstudy-ai
-pip install -r requirements.txt
-ollama pull llama3.2
-ollama pull mxbai-embed-large
-uvicorn backend.app.main:app --reload --port 8000
-streamlit run frontend/app.py
-<<<<<<< HEAD
+Add better source formatting
 
-Example Questions
+Add model selection in the UI
 
-=======
-Example Questions
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
-What is cybersecurity?
-
-What is Wazuh?
-
-How does ransomware work?
-
-What are common cybersecurity threats?
-
-<<<<<<< HEAD
-
-
-Portfolio Value
-
-=======
-Portfolio Value
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
-Shows full-stack development with FastAPI and Streamlit.
-
-Demonstrates local AI and RAG workflow skills.
-
-<<<<<<< HEAD
-
-
-Fits a cybersecurity portfolio project well.
-
-
-
-Can be extended with PDFs, Docker, and more models.
-
-
-
-Future Improvements
-
-=======
-Fits a cybersecurity portfolio because it works with study notes and lab writeups.
-
-Can be extended with PDFs, Docker, or more models later.
-
-Future Improvements
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
-Add PDF and DOCX support.
-
-Add chat history.
-
-Add Docker setup.
-
-Add better source formatting.
-
-Add model selection in the UI.
-
-<<<<<<< HEAD
-
-
-Built by plusive27-max as a cybersecurity and AI portfolio project.
-
-=======
-Built by plusive27-max as a cybersecurity and AI portfolio project.
->>>>>>> f267f30 (Add professional README with badges, demo instructions, and architecture)
+Built by plusive27-max.
