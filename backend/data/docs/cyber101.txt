@@ -1,0 +1,5 @@
+Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks. These attacks are usually aimed at accessing, changing, or destroying sensitive information; extorting money from users; or interrupting normal business processes. [web:165][web:166]
+
+Implementation of cybersecurity measures reduces the risk of cyber attacks and protects organizations and individuals from unauthorized access to data and systems. Effective cybersecurity combines people, processes, and technology. [web:165][web:168]
+
+Common cybersecurity threats include malware, ransomware, phishing attacks, and DDoS attacks. [web:171][web:173]

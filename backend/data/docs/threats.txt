@@ -1,0 +1,7 @@
+Ransomware lifecycle:
+1. Infection: Via phishing emails, malicious downloads, or RDP exploits [web:212]
+2. Encryption: Malware encrypts files using attacker's key [web:213][web:214]
+3. Ransom demand: Note appears demanding Bitcoin payment [web:213][web:219]
+4. Payment: Victim pays (or not), attacker may provide decryptor [web:213]
+
+Common ransomware threats alongside malware, phishing, and DDoS attacks. [web:204]

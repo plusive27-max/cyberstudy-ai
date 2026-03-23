@@ -1,0 +1,1 @@
+Wazuh is an open source SIEM platform for threat detection, incident response, and compliance. It collects logs from endpoints, analyzes them for threats, and creates alerts. Wazuh includes vulnerability detection, file integrity monitoring, and configuration assessment. [web:202][web:205]
