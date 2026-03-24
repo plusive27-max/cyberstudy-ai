@@ -1,93 +1,165 @@
+# 🛡️ CyberStudy AI
 
-# 🛡️ CyberStudy AI - Local RAG Chatbot
+![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi)
+![Streamlit](https://img.shields.io/badge/Streamlit-frontend-FF4B4B?logo=streamlit)
+![Ollama](https://img.shields.io/badge/Ollama-local%20LLM-black)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-vector%20store-orange)
+![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker)
 
+A **fully local** RAG (Retrieval-Augmented Generation) chatbot for studying cybersecurity.  
+Upload your notes, writeups, or study guides — then ask questions and get answers grounded in your own documents.  
+No cloud APIs, no data leaving your machine.
 
+---
 
+## ✨ Features
 
-A local cybersecurity study assistant built with FastAPI, Streamlit, Ollama, and ChromaDB.
+- 💬 **Persistent chat history** — conversation stays on screen as you continue asking
+- 📄 **Multi-format document support** — `.txt`, `.pdf`, and `.docx`
+- 🔍 **RAG pipeline** — answers are grounded in your uploaded documents with source citations
+- 🔒 **Fully local** — powered by Ollama; nothing is sent to external servers
+- 🐳 **Docker support** — spin up the entire stack with one command
+- 📂 **Document manager** — upload, list, and clear your knowledge base from the sidebar
 
-## Features
+---
 
-- Chat with cybersecurity notes and lab writeups
-- Multi-document RAG workflow
-- Local AI with Ollama
-- FastAPI backend
-- Streamlit frontend
+## 🏗️ Architecture
 
-## Tech Stack
+```
+┌─────────────────────┐        HTTP        ┌──────────────────────┐
+│  Streamlit Frontend │  ──────────────▶  │  FastAPI Backend     │
+│  (Chat UI + Upload) │                   │  (RAG pipeline)      │
+└─────────────────────┘                   └──────────┬───────────┘
+                                                     │
+                              ┌──────────────────────┼────────────┐
+                              ▼                       ▼            ▼
+                         ChromaDB              OllamaEmbeddings  ChatOllama
+                      (vector store)         (mxbai-embed-large) (llama3.2)
+```
 
-- Python
-- FastAPI
-- Streamlit
-- Ollama
-- ChromaDB
+---
 
-## How It Works
+## 🚀 Quick Start
 
-1. You add text documents to the project
-2. The documents are stored in ChromaDB
-3. Ollama creates embeddings and generates answers
-4. The FastAPI backend handles requests
-5. The Streamlit app provides the chat interface
+### Option A — Docker (recommended)
 
-## Run the Project
+> Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) or Docker + Docker Compose.
 
-Start the backend:
-
-
-uvicorn backend.app.main:app --reload --port 8000
-Start the frontend in another terminal:
-
-
-streamlit run frontend/app.py
-Open:
-
-
-http://localhost:8501
-Quick Start
-
+```bash
 git clone https://github.com/plusive27-max/cyberstudy-ai.git
 cd cyberstudy-ai
+
+# Start everything (Ollama + backend + frontend)
+docker compose up --build
+```
+
+On first run, pull the required Ollama models:
+
+```bash
+docker exec -it cyberstudy-ollama ollama pull llama3.2
+docker exec -it cyberstudy-ollama ollama pull mxbai-embed-large
+```
+
+Then open **http://localhost:8501** in your browser.
+
+> **No GPU?** Remove the `deploy` block from `docker-compose.yml` before running.
+
+---
+
+### Option B — Manual (local Python)
+
+**Prerequisites:** Python 3.11+, [Ollama](https://ollama.com/) installed and running.
+
+```bash
+git clone https://github.com/plusive27-max/cyberstudy-ai.git
+cd cyberstudy-ai
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Pull Ollama models
 ollama pull llama3.2
 ollama pull mxbai-embed-large
+
+# Start the backend (terminal 1)
 uvicorn backend.app.main:app --reload --port 8000
+
+# Start the frontend (terminal 2)
 streamlit run frontend/app.py
+```
 
-Example Questions:
-What is cybersecurity?
+Open **http://localhost:8501**.
 
-What is Wazuh?
+---
 
-How does ransomware work?
+## 📖 Usage
 
-What are common cybersecurity threats?
+1. **Upload documents** — use the sidebar to upload `.txt`, `.pdf`, or `.docx` files
+2. **Ask questions** — type in the chat box; the assistant answers using your documents
+3. **Check sources** — expand the "📎 Sources" section under each answer to see which files were used
+4. **Clear & reset** — use the sidebar buttons to clear chat history or wipe the knowledge base
 
-Project Structure
+---
 
+## 📁 Project Structure
+
+```
 cyberstudy-ai/
 ├── backend/
 │   ├── app/
 │   │   ├── __init__.py
-│   │   └── main.py
+│   │   └── main.py          # FastAPI app + RAG pipeline
 │   └── data/
-│       ├── chroma/
-│       └── docs/
+│       ├── docs/            # Your uploaded documents go here
+│       └── chroma/          # ChromaDB vector store (auto-generated)
 ├── frontend/
-│   └── app.py
-├── .gitignore
-├── README.md
-└── requirements.txt
+│   └── app.py               # Streamlit chat UI
+├── Dockerfile.backend
+├── Dockerfile.frontend
+├── docker-compose.yml
+├── requirements.txt
+└── README.md
+```
 
-Future Improvements:
-Add PDF and DOCX support
+---
 
-Add chat history
+## 🔧 Configuration
 
-Add Docker setup
+All settings can be overridden with environment variables (useful in Docker or `.env` files):
 
-Add better source formatting
+| Variable      | Default                  | Description                     |
+|---------------|---------------------------|---------------------------------|
+| `LLM_MODEL`   | `llama3.2`               | Ollama model for answering      |
+| `EMBED_MODEL` | `mxbai-embed-large`      | Ollama model for embeddings     |
+| `DATA_PATH`   | `backend/data/docs`      | Where uploaded documents live   |
+| `DB_PATH`     | `backend/data/chroma`    | Where ChromaDB persists         |
+| `BACKEND_URL` | `http://localhost:8000`  | Frontend → backend URL          |
 
-Add model selection in the UI
+---
 
-Built by plusive27-max.
+## 🗺️ Roadmap
+
+- [ ] Streaming responses (token-by-token output)
+- [ ] Multi-turn conversation context in the RAG chain
+- [ ] Model selection from the UI
+- [ ] Better source formatting (page numbers, highlights)
+- [ ] User authentication
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer       | Technology                        |
+|-------------|-----------------------------------|
+| Frontend    | Streamlit                         |
+| Backend     | FastAPI                           |
+| LLM         | Ollama (llama3.2)                 |
+| Embeddings  | Ollama (mxbai-embed-large)        |
+| Vector DB   | ChromaDB                          |
+| RAG         | LangChain                         |
+| Containers  | Docker + Docker Compose           |
+
+---
+
+Built by [plusive27-max](https://github.com/plusive27-max)

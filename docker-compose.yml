@@ -1,0 +1,51 @@
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: cyberstudy-ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    # GPU support — remove the 'deploy' block if you don't have an NVIDIA GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: cyberstudy-backend
+    depends_on:
+      - ollama
+    environment:
+      - DATA_PATH=/app/backend/data/docs
+      - DB_PATH=/app/backend/data/chroma
+      - EMBED_MODEL=mxbai-embed-large
+      - LLM_MODEL=llama3.2
+      # Tell LangChain/Ollama where to find the Ollama service
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - ./backend/data:/app/backend/data   # persist docs + chroma between restarts
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: cyberstudy-frontend
+    depends_on:
+      - backend
+    environment:
+      - BACKEND_URL=http://backend:8000
+    ports:
+      - "8501:8501"
+
+volumes:
+  ollama_data:
