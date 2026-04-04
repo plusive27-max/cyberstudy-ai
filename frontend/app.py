@@ -4,11 +4,12 @@ import os
 
 # ── Config ───────────────────────────────────────────────────────────────────
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+API_KEY = os.getenv("API_KEY", "supersecretkey_change_this_in_production_2026")
 
 # ── Page setup ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CyberStudy AI",
-    page_icon="🛡️",
+    page_icon="shield",
     layout="centered",
 )
 
@@ -16,12 +17,13 @@ st.set_page_config(
 if "messages" not in st.session_state:
     st.session_state.messages = []          # [{role, content, sources}]
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+# ── Helpers (now secured with API key) ───────────────────────────────────────
 def post_question(question: str) -> dict:
     """Send a question to the backend and return the response dict."""
     resp = requests.post(
         f"{BACKEND_URL}/chat",
         json={"question": question},
+        headers={"Authorization": f"Bearer {API_KEY}"},
         timeout=120,
     )
     resp.raise_for_status()
@@ -33,6 +35,7 @@ def upload_file(file) -> str:
     resp = requests.post(
         f"{BACKEND_URL}/add-docs",
         files={"file": (file.name, file.getvalue(), file.type)},
+        headers={"Authorization": f"Bearer {API_KEY}"},
         timeout=60,
     )
     resp.raise_for_status()
@@ -40,22 +43,33 @@ def upload_file(file) -> str:
 
 
 def fetch_doc_list() -> list[str]:
+    """Fetch list of indexed documents (secured)."""
     try:
-        resp = requests.get(f"{BACKEND_URL}/docs-list", timeout=10)
+        resp = requests.get(
+            f"{BACKEND_URL}/docs-list",
+            headers={"Authorization": f"Bearer {API_KEY}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
         return resp.json().get("documents", [])
     except Exception:
         return []
 
 
 def reset_index() -> str:
-    resp = requests.delete(f"{BACKEND_URL}/reset", timeout=30)
+    """Clear the entire knowledge base (secured)."""
+    resp = requests.delete(
+        f"{BACKEND_URL}/reset",
+        headers={"Authorization": f"Bearer {API_KEY}"},
+        timeout=30,
+    )
     resp.raise_for_status()
     return resp.json().get("message", "Index cleared.")
 
 
 # ── Sidebar ──────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.header("📂 Knowledge Base")
+    st.header("Knowledge Base")
 
     uploaded = st.file_uploader(
         "Upload a document",
@@ -72,7 +86,7 @@ with st.sidebar:
                 st.error(f"Upload failed: {detail}")
 
     st.divider()
-    st.subheader("📄 Indexed Documents")
+    st.subheader("Indexed Documents")
     docs = fetch_doc_list()
     if docs:
         for d in docs:
@@ -81,7 +95,7 @@ with st.sidebar:
         st.caption("No documents indexed yet.")
 
     st.divider()
-    if st.button("🗑️ Clear Knowledge Base", use_container_width=True):
+    if st.button("Clear Knowledge Base", use_container_width=True):
         with st.spinner("Clearing…"):
             try:
                 msg = reset_index()
@@ -89,12 +103,12 @@ with st.sidebar:
             except Exception as e:
                 st.error(str(e))
 
-    if st.button("🧹 Clear Chat History", use_container_width=True):
+    if st.button("Clear Chat History", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
 # ── Main chat area ────────────────────────────────────────────────────────────
-st.title("🛡️ CyberStudy AI")
+st.title("CyberStudy AI")
 st.caption("Ask questions about your uploaded cybersecurity notes and writeups.")
 
 # Render previous messages
@@ -102,7 +116,7 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
         if msg.get("sources"):
-            with st.expander("📎 Sources"):
+            with st.expander("Sources"):
                 for src in msg["sources"]:
                     st.markdown(f"- `{src}`")
 
@@ -120,12 +134,12 @@ if question:
         with st.spinner("Thinking…"):
             try:
                 data = post_question(question)
-                answer  = data.get("answer", "No answer returned.")
+                answer = data.get("answer", "No answer returned.")
                 sources = data.get("sources", [])
 
                 st.write(answer)
                 if sources:
-                    with st.expander("📎 Sources"):
+                    with st.expander("Sources"):
                         for src in sources:
                             st.markdown(f"- `{src}`")
 

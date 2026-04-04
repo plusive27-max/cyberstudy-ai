@@ -1,20 +1,13 @@
 services:
-
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.5.0
     container_name: cyberstudy-ollama
     volumes:
       - ollama_data:/root/.ollama
     ports:
       - "11434:11434"
-    # GPU support — remove the 'deploy' block if you don't have an NVIDIA GPU
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    # GPU section removed for Windows/WSL2 compatibility (CPU mode)
+    # Uncomment the block below only after NVIDIA drivers + Container Toolkit are set up
 
   backend:
     build:
@@ -28,12 +21,13 @@ services:
       - DB_PATH=/app/backend/data/chroma
       - EMBED_MODEL=mxbai-embed-large
       - LLM_MODEL=llama3.2
-      # Tell LangChain/Ollama where to find the Ollama service
       - OLLAMA_HOST=http://ollama:11434
+      - API_KEY=supersecretkey_change_this_in_production_2026   # ← change in .env
     volumes:
-      - ./backend/data:/app/backend/data   # persist docs + chroma between restarts
+      - ./backend/data:/app/backend/data
     ports:
       - "8000:8000"
+    restart: unless-stopped
 
   frontend:
     build:
@@ -44,8 +38,10 @@ services:
       - backend
     environment:
       - BACKEND_URL=http://backend:8000
+      - API_KEY=supersecretkey_change_this_in_production_2026   # ← change in .env
     ports:
       - "8501:8501"
+    restart: unless-stopped
 
 volumes:
   ollama_data:

@@ -1,16 +1,30 @@
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
+
+# Create non-root user (security best practice)
+RUN useradd -m -u 1000 appuser
 
 WORKDIR /app
 
-# System deps for PDF/DOCX parsing
+# ── Build dependencies for chromadb / hnswlib (this fixes the failure) ──
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    cmake \
+    g++ \
+    python3-dev \
+    libssl-dev \
+    libffi-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy requirements first (Docker layer caching best practice)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copy the rest of the backend code
+COPY backend/ ./backend/
+
+# Switch to non-root user
+USER appuser
 
 EXPOSE 8000
 
